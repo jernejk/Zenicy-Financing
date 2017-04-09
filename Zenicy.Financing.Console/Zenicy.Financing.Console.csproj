@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Zenicy.Financing.Console</RootNamespace>
     <AssemblyName>Zenicy.Financing.Console</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,7 +47,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Zenicy.Financing.Core\Zenicy.Financing.Core.csproj">
+      <Project>{D9B4BB04-528F-4043-BBCC-0DBB4BCD89A9}</Project>
+      <Name>Zenicy.Financing.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Zenicy.Financing.Toshl\Zenicy.Financing.Toshl.csproj">
+      <Project>{4B7091F5-170C-4A48-A0A9-37736E60D4ED}</Project>
+      <Name>Zenicy.Financing.Toshl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
