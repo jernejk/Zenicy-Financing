@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using Zenicy.Financing.Core.Models;
@@ -11,20 +11,8 @@ namespace Zenicy.Financing.Console
     {
         static void Main(string[] args)
         {
-            List<TagDefinition> tagDefs = new List<TagDefinition>();
-            tagDefs.Add(new TagDefinition("ssw", "SSW", new[] { "FROM SUPERIOR SOFTWAR" }, new string[0]));
-            tagDefs.Add(new TagDefinition("salary", "Salary", new[] { "SALARY" }, new string[0]));
-            tagDefs.Add(new TagDefinition("rent", "Rent", new[] { "LAND LORD" }, new string[0]));
-            tagDefs.Add(new TagDefinition("land-lord", "Land lord", new[] { "LAND LORD" }, new string[0]));
-            tagDefs.Add(new TagDefinition("pt", "Personal Trainer", new[] { "VICTORIA BRUNSBERG" }, new string[0]));
-            tagDefs.Add(new TagDefinition("fitness", "Fitness", new[] { "VICTORIA BRUNSBERG" }, new string[0]));
-            tagDefs.Add(new TagDefinition("fitness", "Fitness", new[] { "AUSFIT ANYTIME" }, new string[0]));
-
-            List<CategoryDefinition> categoryDefs = new List<CategoryDefinition>();
-            categoryDefs.Add(new CategoryDefinition("salary", "Salary", new[] { "FROM SUPERIOR SOFTWAR" }, new string[0]));
-            categoryDefs.Add(new CategoryDefinition("home", "Home and Utillities", new[] { "LAND LORD" }, new string[0]));
-            categoryDefs.Add(new CategoryDefinition("fitness", "Fitness", new[] { "VICTORIA BRUNSBERG" }, new string[0]));
-            categoryDefs.Add(new CategoryDefinition("fitness", "Fitness", new[] { "AUSFIT ANYTIME" }, new string[0]));
+            string json = File.ReadAllText("importSettings.json");
+            var settings = JsonConvert.DeserializeObject<ImportSettings>(json);
 
             foreach (var file in new[] { "ANZ.csv", "ANZ (1).csv", "ANZ (2).csv" })
             {
@@ -35,7 +23,7 @@ namespace Zenicy.Financing.Console
                     var result = importService.Import(stream, "csv", "ANZ");
 
                     IClassificationService classificationService = new ClassificationService();
-                    classificationService.Classify(result.Transactions, categoryDefs, tagDefs);
+                    classificationService.Classify(result.Transactions, settings.Categories, settings.Tags);
 
                     foreach (var t in result.Transactions.Where(t => t.Category != null || t.Tags.Any()))
                     {
