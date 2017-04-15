@@ -14,9 +14,11 @@ namespace Zenicy.Financing.Console
             string json = File.ReadAllText("importSettings.json");
             var settings = JsonConvert.DeserializeObject<ImportSettings>(json);
 
-            foreach (var file in new[] { "ANZ.csv", "ANZ (1).csv", "ANZ (2).csv" })
+            decimal total = 0;
+            foreach (var file in settings.Files)
             {
                 System.Console.WriteLine($"File {file}");
+                System.Console.WriteLine("--------------------------------------------");
                 using (var stream = File.OpenRead(file))
                 {
                     IImportService importService = new ImportService();
@@ -25,6 +27,7 @@ namespace Zenicy.Financing.Console
                     IClassificationService classificationService = new ClassificationService();
                     classificationService.Classify(result.Transactions, settings.Categories, settings.Tags);
 
+                    decimal subtotal = 0;
                     foreach (var t in result.Transactions.Where(t => t.Category != null || t.Tags.Any()))
                     {
                         System.Console.WriteLine($"{t.Date.ToString("dd/MM/yyyy")}\t${t.Amount.ToString()}\t{t.Description}");
@@ -38,10 +41,25 @@ namespace Zenicy.Financing.Console
                         {
                             System.Console.WriteLine("\tTags: No tags");
                         }
+
+                        subtotal += t.Amount;
                     }
 
+                    total += subtotal;
+
+                    System.Console.WriteLine("-------------------");
+                    System.Console.WriteLine("Total: ${0}", subtotal);
                     System.Console.WriteLine();
                 }
+
+            }
+
+            System.Console.WriteLine("Full total: ${0}", total);
+
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Console.WriteLine("Press any key to continue...");
+                System.Console.ReadLine();
             }
         }
     }

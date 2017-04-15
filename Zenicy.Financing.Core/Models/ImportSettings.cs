@@ -11,5 +11,7 @@ namespace Zenicy.Financing.Core.Models
         public string Format { get; set; }
 
         public string Source { get; set; }
+
+        public string[] Files { get; set; }
     }
 }
